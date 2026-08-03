@@ -83,6 +83,8 @@ class ChatRequest(BaseModel):
     scenario_id: Optional[str] = None
     world: Optional[WorldState] = None
     use_llm: bool = True
+    # Optional Bailian / DashScope key for demo visitors (not stored server-side)
+    api_key: Optional[str] = None
 
 
 class ToolCall(BaseModel):
