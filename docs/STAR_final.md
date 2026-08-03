@@ -41,4 +41,4 @@
 - 可扩展到真实座舱 SDK / Robotaxi 订单 API，而不改变编排层协议
 
 **体验入口：** （Render 部署后填写）`https://xxx.onrender.com`  
-**GitHub：** （推送后填写）`https://github.com/SXY-xinyun/xiaopeng-travel-agent` 
+**GitHub：** https://github.com/SXY-xinyun/xiaopeng-travel-agent 
