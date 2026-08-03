@@ -1,0 +1,35 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.env.local
+*.log
+.DS_Store
+.idea/
+.vscode/
+dist/
+build/
+*.pdf
+.cursor/
+submission/*.zip
+submission/*.pdf
+docs/process_screenshots/
+
+
+# impeccable-ignore-start
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/hook.pending.json
+.impeccable/*.png
+.impeccable/live/server.json
+.impeccable/live/sessions/
+.impeccable/live/previews/
+.impeccable/live/annotations/
+.impeccable/live/cache/
+.impeccable/live/manual-edit-apply-transaction.json
+.impeccable/live/manual-edit-events.jsonl
+.impeccable/live/manual-edit-evidence/
+.impeccable/live/pending-manual-edits.json
+.impeccable/live/deferred-svelte-component-accepts.json
+.impeccable/live/*.png
+# impeccable-ignore-end
