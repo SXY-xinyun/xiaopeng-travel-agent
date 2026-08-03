@@ -27,8 +27,9 @@
 ```
 
 - **开发侧：** Cursor / Qoder 辅助架构与迭代  
-- **运行时：** 阿里云百炼通义千问 + Docker 托管（阿里云轻量应用服务器）  
-- **可选：** OSS 托管静态前端
+- **运行时：** 阿里云百炼通义千问（可选）+ 规则安全护栏；Docker / 本地一键启动  
+- **代码托管：** GitHub 公开仓库可复现  
+- **体验交付：** Demo 视频 + 本地 Web Demo（座舱 HUD）
 
 ## 3. 输入输出协议
 
@@ -99,12 +100,13 @@
 
 | 组件 | 选型 |
 |---|---|
-| LLM | 阿里云百炼 `qwen-plus`（OpenAI 兼容接口） |
-| 托管 | Docker Compose → 阿里云轻量应用服务器 |
-| 静态资源 | 默认同容器；可选 OSS + CDN |
-| 密钥 | 服务器 `.env`，不入库 |
+| LLM | 阿里云百炼 `qwen-plus`（OpenAI 兼容接口，可选） |
+| 本地运行 | `run.ps1` / Docker Compose |
+| 代码托管 | GitHub：https://github.com/SXY-xinyun/xiaopeng-travel-agent |
+| 体验交付 | Demo 视频（主）+ 本地复现；可选魔搭创空间 |
+| 密钥 | `.env`，不入库；无 Key 时规则引擎可完整演示 |
 
-无 Key 时自动降级规则编排，保证可演示；正式评测应开启 LLM。
+无 Key 时自动降级规则编排，保证可演示；配置百炼 Key 后启用千问多轮规划。
 
 ## 8. 可复现说明
 
