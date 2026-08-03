@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>技术方案报告 - 小鹏 AI 出行服务管家</title>
+  <style>
+    @page { margin: 16mm; size: A4; }
+    body {
+      font-family: "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      font-size: 11pt; line-height: 1.55; color: #1a1a1a;
+      max-width: 820px; margin: 24px auto; padding: 0 16px;
+    }
+    h1 { font-size: 18pt; border-bottom: 2px solid #1a8f7a; padding-bottom: 8px; }
+    h2 { font-size: 13.5pt; margin-top: 1.35em; color: #0d3d34; }
+    h3 { font-size: 12pt; margin-top: 1em; }
+    code, pre { font-family: Consolas, "JetBrains Mono", monospace; font-size: 9.5pt; }
+    pre { background: #f4f7f6; padding: 10px; border-radius: 6px; white-space: pre-wrap; }
+    table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 10pt; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+    th { background: #eef6f3; }
+    li { margin: 3px 0; }
+    .hint {
+      background: #fff8e6; border: 1px solid #e6d28a; padding: 10px 12px;
+      border-radius: 6px; margin-bottom: 18px; font-size: 10.5pt;
+    }
+    @media print {
+      .hint { display: none; }
+      body { margin: 0; max-width: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hint">
+    <strong>导出 PDF：</strong>用浏览器打开本文件 → Ctrl+P → 目标选「另存为 PDF」→
+    取消页眉页脚 → 保存为 <code>submission/tech_report.pdf</code>（控制在 10 页内）。
+  </div>
+  <h1>技术方案报告</h1>
+<p><strong>作品名称：</strong> Qoder码力星期四·小鹏 AI 出行Agent —— 双模式出行服务编排管家   <strong>建议篇幅：</strong> 导出 PDF 时控制在 8–10 页（可用浏览器打印 / Typora / Pandoc）</p>
+<h2>1. 概述</h2>
+<p>本作品面向「车主自驾」与「Robotaxi 乘客服务」双模式，构建可运行、可解释的 AI 出行服务编排 Agent。系统在模拟座舱与订单工具之上完成更高层编排，而不是重复实现语音识别或自动驾驶算法。</p>
+<p>核心主张：<strong>真实意图理解 + 工具组合闭环 + 安全护栏不可绕过 + 可体验 Demo。</strong></p>
+<h2>2. 系统架构</h2>
+<pre><code>
+用户 / 评委 UI（座舱 HUD）
+
+        │
+
+        ▼
+
+   FastAPI API 层
+
+        │
+
+        ├─► 规则安全护栏（风险、禁止动作、强制工具）
+
+        │
+
+        ├─► 百炼千问多轮编排（意图 / 工具计划 / 结果回灌）
+
+        │
+
+        └─► 模拟工具箱执行 → 更新世界状态 → 结构化输出
+
+</code></pre>
+<ul>
+<li><strong>开发侧：</strong> Cursor / Qoder 辅助架构与迭代  </li>
+<li><strong>运行时：</strong> 阿里云百炼通义千问 + Docker 托管（阿里云轻量应用服务器）  </li>
+<li><strong>可选：</strong> OSS 托管静态前端</li>
+</ul>
+<h2>3. 输入输出协议</h2>
+<h3>3.1 请求 <code>POST /api/chat</code></h3>
+<pre><code>
+{
+
+  &quot;message&quot;: &quot;有点困了，给我放点歌提提神吧&quot;,
+
+  &quot;mode&quot;: &quot;owner&quot;,
+
+  &quot;scenario_id&quot;: &quot;fatigue_driving&quot;,
+
+  &quot;use_llm&quot;: true
+
+}
+
+</code></pre>
+<h3>3.2 响应（对齐赛题结果输出能力）</h3>
+<table>
+<tr><th>字段</th><th>含义</th></tr>
+<tr><td><code>reply</code></td><td>面向用户的自然语言回复</td></tr>
+<tr><td><code>service_plan</code></td><td>结构化服务计划步骤</td></tr>
+<tr><td><code>tool_calls</code></td><td>工具名 / 参数 / 理由 / executed\</td><td>blocked</td></tr>
+<tr><td><code>forbidden_actions</code></td><td>禁止动作</td></tr>
+<tr><td><code>safety_tips</code></td><td>安全提示</td></tr>
+<tr><td><code>user_intent</code> / <code>scene_type</code> / <code>risk_level</code></td><td>场景理解</td></tr>
+<tr><td><code>world_before</code> / <code>world_after</code></td><td>状态对比</td></tr>
+<tr><td><code>planner</code> / <code>agent_rounds</code></td><td>llm 多轮或 rules 降级</td></tr>
+</table>
+<h2>4. 工具箱设计</h2>
+<table>
+<tr><th>类别</th><th>工具</th></tr>
+<tr><td>座舱</td><td>set_ac, set_seat, play_media, enable_fatigue_assist, prep_arrival, lock_doors, child_safety_check</td></tr>
+<tr><td>出行</td><td>navigate_to, find_rest_area, find_charging_station</td></tr>
+<tr><td>Robotaxi</td><td>get_order_status, locate_vehicle_and_passenger, suggest_safe_pickup, change_pickup_point, change_destination, comfort_assist, announce_to_passenger</td></tr>
+<tr><td>升级</td><td>transfer_to_human</td></tr>
+</table>
+<p>工具均模拟数据与服务，保证可离线复现；接口形态可映射真实 SDK。</p>
+<h2>5. 多轮编排与安全规则</h2>
+<h3>5.1 多轮闭环</h3>
+<p>最多 3 轮：规划 → 执行 → 回传 tool_results → 决定继续或 <code>done=true</code> 收敛。   拉开与「单次 Prompt 包装聊天」的差距。</p>
+<h3>5.2 安全护栏（规则始终生效）</h3>
+<table>
+<tr><th>场景</th><th>策略</th></tr>
+<tr><td>疲劳驾驶</td><td>拦截 play_media 主策略；强制疲劳辅助 + 休息点</td></tr>
+<tr><td>亲子出行</td><td>强制 child_safety_check + lock_doors；禁开窗主策略</td></tr>
+<tr><td>上车异常 / 施工</td><td>强制 suggest/change pickup；禁鼓励横穿播报</td></tr>
+<tr><td>乘客求助</td><td>强制 transfer_to_human</td></tr>
+<tr><td>模式隔离</td><td>车主工具与 Robotaxi 工具互斥校验</td></tr>
+</table>
+<h2>6. 场景样例</h2>
+<p>覆盖赛题 8 类推荐场景；评委剧本固化：</p>
+<p>1. 疲劳驾驶（车主）   2. 亲子出行（车主）   3. 上车点异常（Robotaxi）   4. 乘客不适求助（Robotaxi）  </p>
+<p>详见 <code>docs/demo_results.md</code>。</p>
+<h2>7. 模型与云服务</h2>
+<table>
+<tr><th>组件</th><th>选型</th></tr>
+<tr><td>LLM</td><td>阿里云百炼 <code>qwen-plus</code>（OpenAI 兼容接口）</td></tr>
+<tr><td>托管</td><td>Docker Compose → 阿里云轻量应用服务器</td></tr>
+<tr><td>静态资源</td><td>默认同容器；可选 OSS + CDN</td></tr>
+<tr><td>密钥</td><td>服务器 <code>.env</code>，不入库</td></tr>
+</table>
+<p>无 Key 时自动降级规则编排，保证可演示；正式评测应开启 LLM。</p>
+<h2>8. 可复现说明</h2>
+<pre><code>
+cd xiaopeng-travel-agent
+
+copy .env.example .env   # 填入 DASHSCOPE_API_KEY
+
+.\run.ps1
+
+# 或
+
+docker compose up -d --build
+
+</code></pre>
+<p>测试：</p>
+<pre><code>
+.\.venv\Scripts\python tests\test_scenarios.py
+
+</code></pre>
+<p>部署细节见 <code>deploy/aliyun-lightweight.md</code>。</p>
+<h2>9. 创新点与小鹏特色</h2>
+<ul>
+<li>双模式统一编排协议，明确「车主自驾 / Robotaxi 乘客」身份  </li>
+<li>安全护栏与模型规划解耦：强制改点、强制转人工、禁止危险播报  </li>
+<li>评委一键剧本 + 工具时间线 + 世界状态前后对比，强调可解释  </li>
+<li>面向未来座舱 / Robotaxi：编排层不绑定具体车控实现</li>
+</ul>
+</body>
+</html>
