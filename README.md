@@ -1,82 +1,77 @@
-# Qoder鐮佸姏鏄熸湡鍥浡峰皬楣?AI 鍑鸿Agent
+# Qoder码力星期四·小鹏 AI 出行Agent
 
-鍙繍琛屻€佸彲浣撻獙鐨?**AI 鍑鸿鏈嶅姟缂栨帓 Agent**锛氳鐩栥€岃溅涓昏嚜椹俱€嶄笌銆孯obotaxi 涔樺鏈嶅姟銆嶏紝寮鸿皟鍦烘櫙鐞嗚В銆佸伐鍏风紪鎺掗棴鐜€佸畨鍏ㄨ竟鐣屼笌鍙В閲婅緭鍑恒€?
+可运行、可体验的 **AI 出行服务编排 Agent**：覆盖「车主自驾」与「Robotaxi 乘客服务」，强调场景理解、工具编排闭环、安全边界与可解释输出。
 
-杩愯鏃堕粯璁わ細**闃块噷浜戠櫨鐐煎崈闂杞紪鎺?+ 瑙勫垯瀹夊叏鎶ゆ爮**锛涙棤 Key 鑷姩闄嶇骇瑙勫垯寮曟搸銆?
+运行时默认：**阿里云百炼千问多轮编排 + 规则安全护栏**；无 Key 自动降级规则引擎。
 
-## 蹇€熷惎鍔紙鏈湴锛?
+## 快速启动（本地）
 
 ```powershell
 cd xiaopeng-travel-agent
 copy .env.example .env
-# 缂栬緫 .env锛屽～鍏?DASHSCOPE_API_KEY=sk-xxx
+# 可选：编辑 .env，填入 DASHSCOPE_API_KEY=sk-xxx（不填也能规则演示）
 .\run.ps1
 ```
 
-鎵撳紑 http://127.0.0.1:8000  
-鐐瑰嚮椤堕儴 **銆岃嚜鍔ㄦ紨绀?4 鍦烘櫙銆?* 鍗冲彲缁欒瘎濮旀紨绀恒€?
+打开 http://127.0.0.1:8000  
+点击顶部 **「自动演示 4 场景」** 即可录制 Demo / 给评委演示。
 
-## 鍏綉浣撻獙锛圙itHub 鈫?Render锛?
+## 部署与复现
 
-1. 浠ｇ爜鎺ㄩ€佸埌 GitHub锛堟湰浠撳簱锛? 
-2. 鎸?[deploy/render.md](deploy/render.md) 鐢?Render 杩炰粨搴撻儴缃? 
-3. 鍦?Render 鐜鍙橀噺濉叆 `DASHSCOPE_API_KEY`  
-4. 寰楀埌鍏綉閾炬帴锛屼緥濡?`https://xxx.onrender.com`
+- Docker：`docker compose up -d --build`  
+- 魔搭创空间（可选）：[deploy/modelscope-studio.md](deploy/modelscope-studio.md)  
+- 阿里云轻量（可选）：[deploy/aliyun-lightweight.md](deploy/aliyun-lightweight.md)  
 
-闃块噷浜戣交閲忔柟妗堣锛歔deploy/aliyun-lightweight.md](deploy/aliyun-lightweight.md)  
-Docker 鏈湴锛歚docker compose up -d --build`
+## 能力对照赛题
 
-## 鑳藉姏瀵圭収璧涢
-
-| 璧涢瑕佹眰 | 鏈」鐩綋鐜?|
+| 赛题要求 | 本项目体现 |
 |---|---|
-| 鍦烘櫙鐞嗚В | 璇嗗埆鈥滄斁姝屸啋鐤插姵鈥濃€滆窇杩囧幓鈫掔┛琛岄闄┾€濈瓑鐪熷疄鎰忓浘 |
-| 鏈嶅姟缂栨帓 | 澶氳疆锛氳鍒掆啋鎵ц鈫掔粨鏋滃洖鐏屸啋鏀舵暃锛涘伐鍏峰舰鎴愰棴鐜?|
-| 瀹夊叏杈圭晫 | 鐤插姵绂佸ū涔愪富绛栫暐銆佺榧撳姳妯┛銆佸効绔ュ己鍒堕攣闂ㄣ€佹眰鍔╁己鍒惰浆浜哄伐 |
-| 缁撴灉杈撳嚭 | 鍥炲 + 鏈嶅姟璁″垝 + 宸ュ叿鐞嗙敱 + 绂佹鍔ㄤ綔 + 瀹夊叏鎻愮ず + 鐘舵€佸姣?|
-| 鍙綋楠?Demo | 搴ц埍 HUD銆佽瘎濮斿墽鏈€佸叕缃?Docker 閮ㄧ讲 |
+| 场景理解 | 识别“放歌→疲劳”“跑过去→穿行风险”等真实意图 |
+| 服务编排 | 多轮：规划→执行→结果回灌→收敛；工具形成闭环 |
+| 安全边界 | 疲劳禁娱乐主策略、禁鼓励横穿、儿童强制锁门、求助强制转人工 |
+| 结果输出 | 回复 + 服务计划 + 工具理由 + 禁止动作 + 安全提示 + 状态对比 |
+| 可体验 Demo | 座舱 HUD、评委一键剧本、Demo 视频、GitHub 可复现 |
 
-## 鎻愪氦鏉愭枡绱㈠紩
+## 提交材料索引
 
-| 鏉愭枡 | 璺緞 |
+| 材料 | 路径 |
 |---|---|
-| **鎻愪氦瀵圭収娓呭崟锛堝厛鐪嬭繖涓級** | [docs/鎻愪氦娓呭崟.md](docs/鎻愪氦娓呭崟.md) |
-| 璁哄潧姝ｆ枃锛堝鍒剁矘璐达級 | [docs/forum_post.md](docs/forum_post.md) |
-| STAR 浠嬬粛 | [docs/STAR_final.md](docs/STAR_final.md) |
-| 鎶€鏈柟妗堟姤鍛?| [docs/tech_report.md](docs/tech_report.md) 路 鎵撳嵃椤?[docs/tech_report_print.html](docs/tech_report_print.html) |
-| 杩愯鏁堟灉锛? 鍦烘櫙锛?| [docs/demo_results.md](docs/demo_results.md) |
-| Demo 瑙嗛鑴氭湰 | [docs/demo_script.md](docs/demo_script.md) |
-| Qoder 璇佹槑娓呭崟 | [docs/qoder_checklist.md](docs/qoder_checklist.md) |
-| 鍏綉閮ㄧ讲 | [deploy/aliyun-lightweight.md](deploy/aliyun-lightweight.md) |
-| 鎵撳寘鍛戒护 | `.\pack_submission.ps1` 鈫?`submission/` |
+| **交卷材料包（先看这个）** | [docs/交卷材料包.md](docs/交卷材料包.md) |
+| 论坛正文（复制粘贴） | [docs/forum_post.md](docs/forum_post.md) |
+| STAR 介绍 | [docs/STAR_final.md](docs/STAR_final.md) |
+| 技术方案报告 | [docs/tech_report.md](docs/tech_report.md) · 打印页 [docs/tech_report_print.html](docs/tech_report_print.html) |
+| 运行效果（4 场景） | [docs/demo_results.md](docs/demo_results.md) |
+| Demo 视频脚本 | [docs/demo_script.md](docs/demo_script.md) |
+| Qoder 证明清单 | [docs/qoder_checklist.md](docs/qoder_checklist.md) |
+| 打包命令 | `.\pack_submission.ps1` → `submission/` |
 
-璁哄潧鏍囬蹇呴』浠?**銆孮oder鐮佸姏鏄熸湡鍥浡峰皬楣?AI 鍑鸿Agent銆?* 寮€澶淬€?
+论坛标题必须以 **「Qoder码力星期四·小鹏 AI 出行Agent」** 开头。
 
-## 椤圭洰缁撴瀯
+## 项目结构
 
 ```
 xiaopeng-travel-agent/
-鈹溾攢鈹€ backend/app/
-鈹?  鈹溾攢鈹€ main.py
-鈹?  鈹溾攢鈹€ agent/          # 澶氳疆缂栨帓銆佸畨鍏ㄦ姢鏍忋€佸満鏅€丩LM
-鈹?  鈹溾攢鈹€ tools/          # 妯℃嫙宸ュ叿绠?
-鈹?  鈹斺攢鈹€ models/
-鈹溾攢鈹€ frontend/public/    # 搴ц埍 Demo
-鈹溾攢鈹€ deploy/
-鈹溾攢鈹€ docs/
-鈹溾攢鈹€ tests/
-鈹溾攢鈹€ Dockerfile
-鈹溾攢鈹€ docker-compose.yml
-鈹斺攢鈹€ run.ps1
+├── backend/app/
+│   ├── main.py
+│   ├── agent/          # 多轮编排、安全护栏、场景、LLM
+│   ├── tools/          # 模拟工具箱
+│   └── models/
+├── frontend/public/    # 座舱 Demo
+├── deploy/
+├── docs/
+├── tests/
+├── Dockerfile
+├── docker-compose.yml
+└── run.ps1
 ```
 
 ## API
 
-- `GET /api/health` 鈥?鍚?`llm_configured` / `planner_default`
+- `GET /api/health` — 含 `llm_configured` / `planner_default`
 - `GET /api/scenarios`
 - `POST /api/chat`
 
-## 娴嬭瘯
+## 测试
 
 ```powershell
 .\.venv\Scripts\python tests\test_scenarios.py
