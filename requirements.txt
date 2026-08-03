@@ -1,7 +1,5 @@
-fastapi==0.115.12
-uvicorn[standard]==0.34.2
-pydantic==2.11.3
-pydantic-settings==2.9.1
+# ModelScope Studio runtime deps (Gradio provided by studio image)
 httpx==0.28.1
 python-dotenv==1.1.0
-jinja2==3.1.6
+pydantic>=2.7,<3
+pydantic-settings>=2.2,<3
