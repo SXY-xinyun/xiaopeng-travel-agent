@@ -38,13 +38,25 @@
         </div>
       </div>
       <div class="top-right">
-        <div id="healthChip" class="health-chip off">LLM 检测中…</div>
+        <div id="healthChip" class="health-chip off">检测中…</div>
         <div class="mode-switch" role="group" aria-label="模式切换">
           <button id="modeOwner" class="active" type="button">车主自驾</button>
           <button id="modeTaxi" type="button">Robotaxi</button>
         </div>
       </div>
     </header>
+
+    <div class="key-bar">
+      <div class="key-copy">
+        <strong>评委体验说明</strong>
+        <span>无需 API Key 即可点「自动演示 4 场景」完整体验（规则编排 + 安全护栏）。若有百炼 Key，可在右侧粘贴以启用千问多轮编排（仅保存在本机浏览器，不会写入服务器）。</span>
+      </div>
+      <div class="key-form">
+        <input id="apiKeyInput" type="password" placeholder="可选：粘贴 DASHSCOPE API Key（sk-…）" autocomplete="off" />
+        <button id="apiKeySave" type="button">保存</button>
+        <button id="apiKeyClear" type="button" class="ghost">清除</button>
+      </div>
+    </div>
 
     <div class="judge-bar">
       <div class="judge-copy">
