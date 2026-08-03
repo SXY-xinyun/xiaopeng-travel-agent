@@ -49,10 +49,11 @@ Qoder码力星期四·小鹏 AI 出行Agent —— 双模式出行服务编排�
 
 ## 二、可体验入口
 
-- **公网体验链接：** 【部署后填写】`https://你的服务.onrender.com`  
+- **公网体验链接：** 【Render 部署后填写】`https://你的服务.onrender.com`  
 - **建议操作：** 打开后点击顶部「自动演示 4 场景」（2 车主 + 2 Robotaxi）  
 - **健康检查：** `https://你的服务.onrender.com/api/health`（应见 `llm_configured: true`）  
-- **GitHub 仓库：** 【推送后填写】`https://github.com/SXY-xinyun/xiaopeng-travel-agent`  
+- **GitHub 仓库：** https://github.com/SXY-xinyun/xiaopeng-travel-agent  
+- **源码 zip（备份）：** https://github.com/SXY-xinyun/xiaopeng-travel-agent/releases/tag/v0.1.0 
 
 > 本作品不在重复实现空调/导航等基础能力，而是在已有模拟工具之上做更高层服务编排：识别真实意图与风险 → 多轮规划—执行—回灌 → 规则护栏拦截危险动作，并输出可解释服务计划与安全边界。
 
