@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from .agent.llm import override_api_key
 from .agent.orchestrator import run_agent
 from .agent.scenarios import all_scenarios, get_scenario
 from .models.schemas import ChatRequest, Mode
@@ -42,6 +43,8 @@ def health():
         "service": "xiaopeng-travel-agent",
         "llm_configured": llm,
         "planner_default": "llm" if llm else "rules",
+        "demo_without_key": True,
+        "optional_client_api_key": True,
         "model": (
             os.getenv("DASHSCOPE_MODEL")
             or os.getenv("OPENAI_MODEL")
@@ -70,13 +73,14 @@ def tools(mode: Mode = Mode.OWNER):
 
 @app.post("/api/chat")
 async def chat(req: ChatRequest):
-    result = await run_agent(
-        message=req.message,
-        mode=req.mode,
-        scenario_id=req.scenario_id,
-        world=req.world,
-        use_llm=req.use_llm,
-    )
+    with override_api_key(req.api_key):
+        result = await run_agent(
+            message=req.message,
+            mode=req.mode,
+            scenario_id=req.scenario_id,
+            world=req.world,
+            use_llm=req.use_llm,
+        )
     return result.model_dump(mode="json")
 
 
