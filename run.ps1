@@ -5,7 +5,7 @@ if (-not (Test-Path ".venv")) {
   python -m venv .venv
 }
 .\.venv\Scripts\python -m pip install -U pip
-.\.venv\Scripts\pip install -r requirements.txt
+.\.venv\Scripts\pip install -r requirements-local.txt
 
 $env:PYTHONPATH = Join-Path $PSScriptRoot "backend"
 Write-Host "Starting http://127.0.0.1:8000 ..."
