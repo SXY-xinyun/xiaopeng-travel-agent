@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: xiaopeng-travel-agent
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: DASHSCOPE_API_KEY
+        sync: false
+      - key: DASHSCOPE_MODEL
+        value: qwen-plus
+      - key: HOST
+        value: 0.0.0.0
