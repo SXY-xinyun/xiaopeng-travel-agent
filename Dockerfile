@@ -8,8 +8,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     HOST=0.0.0.0 \
     PORT=8000
 
-COPY requirements.txt .
-# 国内构建（魔搭）优先用阿里云 PyPI 镜像；失败时可改为官方源
+COPY requirements-local.txt ./requirements.txt
+# 国内构建优先阿里云镜像
 RUN pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ \
     || pip install --no-cache-dir -r requirements.txt
 
