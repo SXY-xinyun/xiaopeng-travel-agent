@@ -1,0 +1,309 @@
+[
+  {
+    "id": "fatigue_driving",
+    "title": "疲劳驾驶提醒",
+    "mode": "owner",
+    "input": "有点困了，给我放点歌提提神吧",
+    "risk_level": "high",
+    "scene_type": "fatigue_driving",
+    "user_intent": "用户表面要提神娱乐，真实意图是对抗疲劳；核心目标是降低驾驶风险并引导安全休息。",
+    "reply": "我更担心的是疲劳风险，而不是缺一首歌。已开启疲劳辅助并帮你导航到最近安全休息点；到服务区后再决定要不要听音乐。 本次共执行 4 项工具调用。 安全提示：检测到疲劳驾驶风险：优先引导至安全休息点，不要用娱乐掩盖困意。",
+    "planner": "rules",
+    "transfer_to_human": false,
+    "tool_calls": [
+      {
+        "tool": "enable_fatigue_assist",
+        "status": "executed",
+        "reason": "疲劳风险升高，先启用座舱疲劳辅助组合策略"
+      },
+      {
+        "tool": "set_ac",
+        "status": "executed",
+        "reason": "提高通风与略降舱温，帮助保持清醒"
+      },
+      {
+        "tool": "find_rest_area",
+        "status": "executed",
+        "reason": "寻找最近安全休息点，而不是继续催促驾驶"
+      },
+      {
+        "tool": "navigate_to",
+        "status": "executed",
+        "reason": "将导航途经点更新为安全休息点"
+      }
+    ],
+    "forbidden_actions": [
+      "play_media 作为疲劳场景的主策略（可短暂低音量舒缓，但不能替代休息）",
+      "继续高速巡航而不建议休息"
+    ],
+    "safety_tips": [
+      "检测到疲劳驾驶风险：优先引导至安全休息点，不要用娱乐掩盖困意。"
+    ],
+    "service_plan": [
+      {
+        "action": "理解真实意图",
+        "detail": "场景=fatigue_driving；规划器=rules；编排轮次=1"
+      },
+      {
+        "action": "安全边界评估",
+        "detail": "规则护栏识别风险并生成禁止动作"
+      },
+      {
+        "action": "调用 enable_fatigue_assist",
+        "detail": "疲劳风险升高，先启用座舱疲劳辅助组合策略"
+      },
+      {
+        "action": "调用 set_ac",
+        "detail": "提高通风与略降舱温，帮助保持清醒"
+      },
+      {
+        "action": "调用 find_rest_area",
+        "detail": "寻找最近安全休息点，而不是继续催促驾驶"
+      },
+      {
+        "action": "调用 navigate_to",
+        "detail": "将导航途经点更新为安全休息点"
+      },
+      {
+        "action": "向用户确认结果",
+        "detail": "用户可继续追加指令"
+      }
+    ]
+  },
+  {
+    "id": "family_trip",
+    "title": "亲子出行",
+    "mode": "owner",
+    "input": "后排宝宝有点热，开一下车窗透透气",
+    "risk_level": "high",
+    "scene_type": "family_trip",
+    "user_intent": "亲子出行温控/舒适诉求，需叠加儿童安全边界（门锁、温度、开窗风险）。",
+    "reply": "后排有宝宝时，我建议先锁好儿童锁、用空调降温，而不是直接开窗。已经帮你完成安全检查和温控调节。 本次共执行 4 项工具调用。 安全提示：亲子出行：确认儿童锁、温控与急加速限制。",
+    "planner": "rules",
+    "transfer_to_human": false,
+    "tool_calls": [
+      {
+        "tool": "child_safety_check",
+        "status": "executed",
+        "reason": "儿童在座，先做安全检查"
+      },
+      {
+        "tool": "lock_doors",
+        "status": "executed",
+        "reason": "确认儿童锁与车门锁定，避免误开车门"
+      },
+      {
+        "tool": "set_ac",
+        "status": "executed",
+        "reason": "用空调降温替代开窗，降低高速开窗与异物风险"
+      },
+      {
+        "tool": "set_seat",
+        "status": "executed",
+        "reason": "后排通风轻度开启，提升儿童舒适"
+      }
+    ],
+    "forbidden_actions": [
+      "在儿童在座时保持车门解锁状态",
+      "高速行驶时开窗作为儿童降温主策略"
+    ],
+    "safety_tips": [
+      "亲子出行：确认儿童锁、温控与急加速限制。"
+    ],
+    "service_plan": [
+      {
+        "action": "理解真实意图",
+        "detail": "场景=family_trip；规划器=rules；编排轮次=1"
+      },
+      {
+        "action": "安全边界评估",
+        "detail": "规则护栏识别风险并生成禁止动作"
+      },
+      {
+        "action": "调用 child_safety_check",
+        "detail": "儿童在座，先做安全检查"
+      },
+      {
+        "action": "调用 lock_doors",
+        "detail": "确认儿童锁与车门锁定，避免误开车门"
+      },
+      {
+        "action": "调用 set_ac",
+        "detail": "用空调降温替代开窗，降低高速开窗与异物风险"
+      },
+      {
+        "action": "调用 set_seat",
+        "detail": "后排通风轻度开启，提升儿童舒适"
+      },
+      {
+        "action": "向用户确认结果",
+        "detail": "用户可继续追加指令"
+      }
+    ]
+  },
+  {
+    "id": "pickup_abnormal",
+    "title": "上车点异常",
+    "mode": "robotaxi",
+    "input": "车在对面，我现在跑过去行吗？",
+    "risk_level": "high",
+    "scene_type": "pickup_abnormal",
+    "user_intent": "上车点存在穿行/临停风险，真实目标是安全会合，而不是催促乘客冒险过去。",
+    "reply": "请不要跑到马路对面。我已把上车点改到安全落客区，车辆会同步过去接你，步行大约两分钟。 本次共执行 5 项工具调用。 安全提示：上车点存在穿行风险：禁止引导乘客横穿马路，应改安全落客区。",
+    "planner": "rules",
+    "transfer_to_human": false,
+    "tool_calls": [
+      {
+        "tool": "get_order_status",
+        "status": "executed",
+        "reason": "确认车辆是否已到达危险临停点"
+      },
+      {
+        "tool": "locate_vehicle_and_passenger",
+        "status": "executed",
+        "reason": "确认乘客是否位于马路对面等高风险侧"
+      },
+      {
+        "tool": "suggest_safe_pickup",
+        "status": "executed",
+        "reason": "生成不需横穿马路的安全上车点"
+      },
+      {
+        "tool": "change_pickup_point",
+        "status": "executed",
+        "reason": "执行改点，避免乘客冒险穿行"
+      },
+      {
+        "tool": "announce_to_passenger",
+        "status": "executed",
+        "reason": "安抚乘客并给出步行指引"
+      }
+    ],
+    "forbidden_actions": [
+      "引导乘客横穿马路前往原上车点",
+      "在危险路边长时间等待开门",
+      "在施工点附近维持原危险上车点"
+    ],
+    "safety_tips": [
+      "上车点存在穿行风险：禁止引导乘客横穿马路，应改安全落客区。",
+      "附近有道路施工：优先改点并安抚乘客。",
+      "当前临停点不安全，应改安全落客区。",
+      "关注道路事件，必要时重规划路线或改上车点。"
+    ],
+    "service_plan": [
+      {
+        "action": "理解真实意图",
+        "detail": "场景=pickup_abnormal；规划器=rules；编排轮次=1"
+      },
+      {
+        "action": "安全边界评估",
+        "detail": "规则护栏识别风险并生成禁止动作"
+      },
+      {
+        "action": "调用 get_order_status",
+        "detail": "确认车辆是否已到达危险临停点"
+      },
+      {
+        "action": "调用 locate_vehicle_and_passenger",
+        "detail": "确认乘客是否位于马路对面等高风险侧"
+      },
+      {
+        "action": "调用 suggest_safe_pickup",
+        "detail": "生成不需横穿马路的安全上车点"
+      },
+      {
+        "action": "调用 change_pickup_point",
+        "detail": "执行改点，避免乘客冒险穿行"
+      },
+      {
+        "action": "调用 announce_to_passenger",
+        "detail": "安抚乘客并给出步行指引"
+      },
+      {
+        "action": "向用户确认结果",
+        "detail": "用户可继续追加指令"
+      }
+    ]
+  },
+  {
+    "id": "passenger_help",
+    "title": "乘客不适求助",
+    "mode": "robotaxi",
+    "input": "我有点头晕想吐，能不能先停一下",
+    "risk_level": "high",
+    "scene_type": "passenger_help",
+    "user_intent": "乘客身体不适/求助，优先舒适辅助与安全停车策略，并升级人工。",
+    "reply": "收到，你的不适我会优先处理。已开启舒适辅助、前往安全停车点，并转接人工坐席，请尽量深呼吸放松。 本次共执行 5 项工具调用。 人工坐席正在接入。 安全提示：乘客/车主体感异常：先保障安全与舒适，必要时立即转人工。",
+    "planner": "rules",
+    "transfer_to_human": true,
+    "tool_calls": [
+      {
+        "tool": "comfort_assist",
+        "status": "executed",
+        "reason": "先做舒缓：降温、柔风、减少晃动感"
+      },
+      {
+        "tool": "set_ac",
+        "status": "executed",
+        "reason": "快速降温通风"
+      },
+      {
+        "tool": "navigate_to",
+        "status": "executed",
+        "reason": "改驶最近安全临停/急诊友好落客点（模拟）"
+      },
+      {
+        "tool": "transfer_to_human",
+        "status": "executed",
+        "reason": "身体不适属于高风险，升级人工安全坐席"
+      },
+      {
+        "tool": "announce_to_passenger",
+        "status": "executed",
+        "reason": "安抚并告知下一步"
+      }
+    ],
+    "forbidden_actions": [
+      "忽略不适主诉继续常规导航推荐",
+      "在非安全区域执行路边停车"
+    ],
+    "safety_tips": [
+      "乘客/车主体感异常：先保障安全与舒适，必要时立即转人工。",
+      "高速/快速路禁止随意路边停车，应导航至服务区或应急停车带。"
+    ],
+    "service_plan": [
+      {
+        "action": "理解真实意图",
+        "detail": "场景=passenger_help；规划器=rules；编排轮次=1"
+      },
+      {
+        "action": "安全边界评估",
+        "detail": "规则护栏识别风险并生成禁止动作"
+      },
+      {
+        "action": "调用 comfort_assist",
+        "detail": "先做舒缓：降温、柔风、减少晃动感"
+      },
+      {
+        "action": "调用 set_ac",
+        "detail": "快速降温通风"
+      },
+      {
+        "action": "调用 navigate_to",
+        "detail": "改驶最近安全临停/急诊友好落客点（模拟）"
+      },
+      {
+        "action": "调用 transfer_to_human",
+        "detail": "身体不适属于高风险，升级人工安全坐席"
+      },
+      {
+        "action": "调用 announce_to_passenger",
+        "detail": "安抚并告知下一步"
+      },
+      {
+        "action": "转人工坐席",
+        "detail": "等待人工接管与回访"
+      }
+    ]
+  }
+]
