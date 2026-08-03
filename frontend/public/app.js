@@ -5,12 +5,15 @@ const JUDGE_SCRIPT = [
   { id: "passenger_help", title: "乘客不适求助" },
 ];
 
+const KEY_STORAGE = "xp_demo_api_key";
+
 const state = {
   mode: "owner",
   scenarioId: null,
   world: null,
   scenarios: [],
   demoRunning: false,
+  apiKey: sessionStorage.getItem(KEY_STORAGE) || "",
 };
 
 const els = {
@@ -39,7 +42,33 @@ const els = {
   autoDemoBtn: document.getElementById("autoDemoBtn"),
   mapHint: document.getElementById("mapHint"),
   mapCaption: document.getElementById("mapCaption"),
+  apiKeyInput: document.getElementById("apiKeyInput"),
+  apiKeySave: document.getElementById("apiKeySave"),
+  apiKeyClear: document.getElementById("apiKeyClear"),
 };
+
+function refreshKeyUi() {
+  if (els.apiKeyInput) {
+    els.apiKeyInput.value = state.apiKey ? "••••••••••••" : "";
+    els.apiKeyInput.dataset.masked = state.apiKey ? "1" : "0";
+  }
+  updateHealthChip();
+}
+
+function updateHealthChip(serverConfigured) {
+  if (state.apiKey) {
+    els.healthChip.textContent = "浏览器 Key · 将走 LLM";
+    els.healthChip.className = "health-chip on";
+    return;
+  }
+  if (serverConfigured) {
+    els.healthChip.textContent = "服务端 LLM 已连接";
+    els.healthChip.className = "health-chip on";
+    return;
+  }
+  els.healthChip.textContent = "免 Key 演示 · 规则编排可用";
+  els.healthChip.className = "health-chip off";
+}
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -162,13 +191,7 @@ async function loadHealth() {
   try {
     const res = await fetch("/api/health");
     const data = await res.json();
-    if (data.llm_configured) {
-      els.healthChip.textContent = `LLM 已连接 · ${data.model || "qwen"}`;
-      els.healthChip.className = "health-chip on";
-    } else {
-      els.healthChip.textContent = "规则降级 · 未配置百炼 Key";
-      els.healthChip.className = "health-chip off";
-    }
+    updateHealthChip(Boolean(data.llm_configured));
   } catch {
     els.healthChip.textContent = "服务未连接";
     els.healthChip.className = "health-chip off";
@@ -221,16 +244,18 @@ function syncModeButtons() {
 }
 
 async function sendChat(message, scenarioId) {
+  const payload = {
+    message,
+    mode: state.mode,
+    scenario_id: scenarioId ?? state.scenarioId,
+    world: state.world,
+    use_llm: true,
+  };
+  if (state.apiKey) payload.api_key = state.apiKey;
   const res = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message,
-      mode: state.mode,
-      scenario_id: scenarioId ?? state.scenarioId,
-      world: state.world,
-      use_llm: true,
-    }),
+    body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
@@ -320,10 +345,44 @@ els.autoDemoBtn.addEventListener("click", async () => {
   }
 });
 
+if (els.apiKeyInput) {
+  els.apiKeyInput.addEventListener("focus", () => {
+    if (els.apiKeyInput.dataset.masked === "1") {
+      els.apiKeyInput.value = "";
+      els.apiKeyInput.dataset.masked = "0";
+    }
+  });
+}
+
+if (els.apiKeySave) {
+  els.apiKeySave.addEventListener("click", () => {
+    const raw = (els.apiKeyInput.value || "").trim();
+    if (!raw || raw.startsWith("•")) {
+      addBubble("agent", "请先粘贴有效的百炼 API Key（sk- 开头），或直接无 Key 体验演示。", "KEY");
+      return;
+    }
+    state.apiKey = raw;
+    sessionStorage.setItem(KEY_STORAGE, raw);
+    refreshKeyUi();
+    addBubble("agent", "已在本机浏览器保存 Key。后续编排将优先走千问 LLM；清除后仍可无 Key 演示。", "KEY");
+  });
+}
+
+if (els.apiKeyClear) {
+  els.apiKeyClear.addEventListener("click", () => {
+    state.apiKey = "";
+    sessionStorage.removeItem(KEY_STORAGE);
+    refreshKeyUi();
+    loadHealth();
+    addBubble("agent", "已清除浏览器 Key。当前可继续用规则编排完整体验。", "KEY");
+  });
+}
+
 (async function init() {
+  refreshKeyUi();
   addBubble(
     "agent",
-    "你好，我是小鹏 AI 出行服务管家。我会先理解你没说出口的意图，再编排座舱/导航/补能/Robotaxi 工具，并守住安全边界。",
+    "你好，我是小鹏 AI 出行服务管家。无需 API Key 也可直接点顶部「自动演示 4 场景」。有百炼 Key 时可粘贴以启用千问多轮编排。",
     "BOOT"
   );
   await loadHealth();
