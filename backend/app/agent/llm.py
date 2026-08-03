@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 import os
 import re
-from typing import Any, Optional
+from contextlib import contextmanager
+from contextvars import ContextVar
+from typing import Any, Iterator, Optional
 
 import httpx
 
@@ -12,9 +14,25 @@ from ..tools.registry import list_tools
 
 MAX_AGENT_ROUNDS = 3
 
+# Optional per-request key from the Web Demo (judges may paste Bailian Key)
+_request_api_key: ContextVar[Optional[str]] = ContextVar("request_api_key", default=None)
+
+
+@contextmanager
+def override_api_key(api_key: Optional[str]) -> Iterator[None]:
+    token = _request_api_key.set((api_key or "").strip() or None)
+    try:
+        yield
+    finally:
+        _request_api_key.reset(token)
+
 
 def llm_configured() -> bool:
-    return bool(os.getenv("DASHSCOPE_API_KEY") or os.getenv("OPENAI_API_KEY"))
+    return bool(
+        _request_api_key.get()
+        or os.getenv("DASHSCOPE_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+    )
 
 
 def configured_model() -> str:
@@ -22,7 +40,12 @@ def configured_model() -> str:
 
 
 def _api_config() -> tuple[str, str, str]:
-    api_key = os.getenv("DASHSCOPE_API_KEY") or os.getenv("OPENAI_API_KEY") or ""
+    api_key = (
+        _request_api_key.get()
+        or os.getenv("DASHSCOPE_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+        or ""
+    )
     base = os.getenv(
         "OPENAI_BASE_URL",
         "https://dashscope.aliyuncs.com/compatible-mode/v1",
