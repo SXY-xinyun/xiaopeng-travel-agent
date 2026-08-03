@@ -64,8 +64,9 @@
 </code></pre>
 <ul>
 <li><strong>开发侧：</strong> Cursor / Qoder 辅助架构与迭代  </li>
-<li><strong>运行时：</strong> 阿里云百炼通义千问 + Docker 托管（阿里云轻量应用服务器）  </li>
-<li><strong>可选：</strong> OSS 托管静态前端</li>
+<li><strong>运行时：</strong> 阿里云百炼通义千问（可选）+ 规则安全护栏；Docker / 本地一键启动  </li>
+<li><strong>代码托管：</strong> GitHub 公开仓库可复现  </li>
+<li><strong>体验交付：</strong> Demo 视频 + 本地 Web Demo（座舱 HUD）</li>
 </ul>
 <h2>3. 输入输出协议</h2>
 <h3>3.1 请求 <code>POST /api/chat</code></h3>
@@ -123,12 +124,13 @@
 <h2>7. 模型与云服务</h2>
 <table>
 <tr><th>组件</th><th>选型</th></tr>
-<tr><td>LLM</td><td>阿里云百炼 <code>qwen-plus</code>（OpenAI 兼容接口）</td></tr>
-<tr><td>托管</td><td>Docker Compose → 阿里云轻量应用服务器</td></tr>
-<tr><td>静态资源</td><td>默认同容器；可选 OSS + CDN</td></tr>
-<tr><td>密钥</td><td>服务器 <code>.env</code>，不入库</td></tr>
+<tr><td>LLM</td><td>阿里云百炼 <code>qwen-plus</code>（OpenAI 兼容接口，可选）</td></tr>
+<tr><td>本地运行</td><td><code>run.ps1</code> / Docker Compose</td></tr>
+<tr><td>代码托管</td><td>GitHub：https://github.com/SXY-xinyun/xiaopeng-travel-agent</td></tr>
+<tr><td>体验交付</td><td>Demo 视频（主）+ 本地复现；可选魔搭创空间</td></tr>
+<tr><td>密钥</td><td><code>.env</code>，不入库；无 Key 时规则引擎可完整演示</td></tr>
 </table>
-<p>无 Key 时自动降级规则编排，保证可演示；正式评测应开启 LLM。</p>
+<p>无 Key 时自动降级规则编排，保证可演示；配置百炼 Key 后启用千问多轮规划。</p>
 <h2>8. 可复现说明</h2>
 <pre><code>
 cd xiaopeng-travel-agent
